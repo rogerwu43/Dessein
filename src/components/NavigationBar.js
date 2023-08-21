@@ -27,12 +27,12 @@ const NavigationBar = (props) => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        backgroundColor: 'white',
-        borderColor: 'grey',
+        backgroundColor: '#242836',
+        borderColor: '#313336',
         borderStyle: 'solid',
-        borderTopWidth: 0.25,
+        borderTopWidth: 0.5,
         flexDirection: 'row',
-        height: 50,
+        height: 60,
         justifyContent: 'space-evenly',
         paddingLeft: 10,
         paddingRight: 10,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         width: 40,
     },
     selected: {
-        borderColor: 'linear-gradient(to left, #743ad5, #d53a9d)',
+        borderColor: '#E55838',
         borderStyle: 'solid',
         borderWidth: 2,
         borderRadius: 50,

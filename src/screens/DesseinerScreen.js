@@ -75,7 +75,7 @@ const DesseinerScreen = (props) => {
                     
                     <TextInput value={newDesseinTextInput} onChangeText={onChangeNewDesseinTextInput}
                         style={ { marginTop: 20, height: 200, borderWidth: 1, borderColor: 'lightgrey', padding: 10 } }
-                        autoFocus={ true } textAlignVertical='top'
+                        autoFocus={ true } multiline={ true } textAlignVertical='top'
                     />
 
                     <View style={{ marginTop: 20, alignItems: 'center' }}>
@@ -100,7 +100,7 @@ const DesseinerScreen = (props) => {
 
             <View style={ styles.addDesseinContainer }>
                 <TouchableOpacity onPress={ showCreateDesseinModal } >
-                    <FontAwesomeIcon icon={ fasCirclePlus } size={ 32 } color={ DesseinerService.desseiners[props.desseiner].color } />
+                    <FontAwesomeIcon icon={ fasCirclePlus } size={ 32 } color={ '#ff9e00' } />
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -110,7 +110,7 @@ const DesseinerScreen = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'lightgrey',
+        backgroundColor: '#242836',
         flex: 1,
         paddingHorizontal: 10,
         paddingVertical: 20,

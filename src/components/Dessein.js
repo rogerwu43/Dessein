@@ -85,7 +85,7 @@ const Dessein = (props) => {
                     <Image source={ DesseinerService.desseiners[props.desseiner].avatar } style={ styles.avatar }></Image>
                 </View>
                 <View style={ styles.textContainer }>
-                    <Text>{ props.dessein.text }</Text>
+                    <Text style={{ color: 'white' }}>{ props.dessein.text }</Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -95,14 +95,14 @@ const Dessein = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: '#313336',
         borderRadius: 10,
         columnGap: 10,
         flexDirection: 'row',
         padding: 10,
     },
     avatarContainer: {
-
+        
     },
     avatar: {
         borderRadius: 25,
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     },
     modalAvatarContainer: {
         alignItems: 'center',
+
     },
     modalAvatar: {
         borderRadius: 50,
@@ -118,6 +119,10 @@ const styles = StyleSheet.create({
         width: 100,
     },
     textContainer: {
+        borderLeftColor: '#242836',
+        borderLeftWidth: 1,
+        paddingLeft: 10,
+        flex: 1,
     },
 });
 

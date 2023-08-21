@@ -5,9 +5,17 @@ import DesseinerScreen from './src/screens/DesseinerScreen';
 import NavigationBar from './src/components/NavigationBar';
 import StatusBar from './src/components/StatusBar';
 
+import DesseinerService from './src/services/DesseinerService';
+
 
 export default function App() {
-    const [currentDesseiner, setCurrentDesseiner] = useState('gaia');
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    var desseiners = Object.keys(DesseinerService.desseiners);
+    var random = getRandomInt(desseiners.length);
+    const [currentDesseiner, setCurrentDesseiner] = useState(desseiners[random]);
 
     return (
         <View style={ styles.container }>
@@ -21,7 +29,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
         display: 'flex',
         flex: 1,
     },
