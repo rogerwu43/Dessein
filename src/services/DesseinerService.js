@@ -31,7 +31,7 @@ class DesseinerService {
             },
         };
 
-        this._localStorage = undefined;
+        this.localStorage = undefined;
         this.localStorageId = '@DesseinApp';
     }
 
@@ -39,93 +39,68 @@ class DesseinerService {
         return this.desseiners;
     }
 
-    async getLocalStorage() {
-        if (this._localStorage) {
-            // console.log('stored', this._localStorage);
-            return Promise.resolve(this._localStorage);
+    hasInitLocalStorage() {
+        return this.localStorage !== undefined;
+    }
+
+    async initLocalStorage() {
+        var self = this;
+        return AsyncStorage.getItem(self.localStorageId).then((_localStorage) => {
+            return self.localStorage = JSON.parse(_localStorage) || {};
+        });
+    }
+
+    getLocalStorage() {
+        return this.localStorage;
+    }
+
+    async saveLocalStorage() {
+        const newLocalStorage = !!this.localStorage ? this.localStorage : {};
+        return AsyncStorage.setItem(this.localStorageId, JSON.stringify(newLocalStorage));
+    }
+
+    getDesseins(desseiner) {
+        return !!this.localStorage[desseiner] ? [...this.localStorage[desseiner]] : [];
+    }
+
+    generateNextDesseinId(desseiner) {
+        var currentDesseins = this.localStorage[desseiner];
+
+        var newDesseinId = 1;
+        if (currentDesseins.length) {
+            const currentHighestId = currentDesseins.reduce((prev, cur) => { return prev.id > cur.id ? prev : cur }).id;
+            newDesseinId = currentHighestId + 1;
+        }
+        return newDesseinId;
+    }
+
+    async addDessein(desseiner, desseinText) {
+        const newDessein = {
+            id: this.generateNextDesseinId(desseiner),
+            text: desseinText,
+        };
+        this.localStorage[desseiner].push(newDessein);
+
+        return this.saveLocalStorage().then(() => {
+            return newDessein;
+        });
+    }
+
+    async updateDessein(desseiner, desseinId, newDesseinText) {
+        var dessein = this.localStorage[desseiner].find((_dessein) => { return _dessein.id === desseinId });
+        if (dessein) {
+            dessein.text = newDesseinText;
         }
 
-        var self = this;
-        return AsyncStorage.getItem(this.localStorageId).then((localStorage) => {
-            // console.log(JSON.parse(localStorage) || {});
-            return self._localStorage = JSON.parse(localStorage) || {};
+        return this.saveLocalStorage().then(() => {
+            return dessein;
         });
-    }
-
-    async getDesseins(desseiner) {
-        var self = this;
-        return this.getLocalStorage().then((localStorage) => {
-            if (!localStorage[desseiner]) { return []; }
-            return [...localStorage[desseiner]];
-        });
-    }
-
-    async setLocalStorage(newLocalStorage) {
-        newLocalStorage = newLocalStorage || {};
-
-        var self = this;
-        return AsyncStorage.setItem(this.localStorageId, JSON.stringify(newLocalStorage)).then(() => {
-            self._localStorage = newLocalStorage;
-        });
-    }
-
-    async addDessein(desseinText, desseiner) {
-        var self = this;
-        return this.getLocalStorage().then((localStorage) => {
-            var desseinerDesseins = localStorage[desseiner] || [];
-            
-            var newDesseinId = 1;
-            if (desseinerDesseins.length) {
-                const currentHighestId = desseinerDesseins.reduce((prev, cur) => { return prev.id > cur.id ? prev : cur }).id;
-                newDesseinId = currentHighestId + 1;
-            }
-            const newDessein = {
-                id: newDesseinId,
-                text: desseinText,
-            };
-
-            desseinerDesseins.push(newDessein);
-            localStorage[desseiner] = desseinerDesseins;
-            return self.setLocalStorage(localStorage).then(() => {
-                return newDessein;
-            });
-        });
-    }
-
-    async editDessein(desseiner, desseinId, newDesseinText) {
-        var self = this;
-        return this.getLocalStorage().then((localStorage) => {
-            var desseinerDesseins = localStorage[desseiner] || [];
-            
-            var dessein = desseinerDesseins.find((_dessein) => { return _dessein.id === desseinId });
-            if (dessein) {
-                dessein.text = newDesseinText;
-            }
-
-            localStorage[desseiner] = desseinerDesseins;
-            return self.setLocalStorage(localStorage).then(() => {
-                return dessein;
-            });
-        });  
     }
 
     async deleteDessein(desseiner, desseinId) {
-        if (!desseinId) {
-            return Promise.resolve();
-        }
+        this.localStorage[desseiner] = this.localStorage[desseiner].filter((_dessein) => { return _dessein.id !== desseinId });
 
-        var self = this;
-        return this.getLocalStorage().then((localStorage) => {
-            var desseinerDesseins = localStorage[desseiner] || [];
-            desseinerDesseins = desseinerDesseins.filter((_dessein) => { return _dessein.id !== desseinId });
-
-            localStorage[desseiner] = desseinerDesseins;
-            return self.setLocalStorage(localStorage);
-        });   
-    }
-
-    async clear() {
-        return this.setLocalStorage({});
+        return this.saveLocalStorage();
     }
 }
 
